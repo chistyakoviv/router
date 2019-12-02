@@ -1,11 +1,11 @@
-import CacheInterface from "./interfaces/CacheInterface";
+import CacheInterface from './interfaces/CacheInterface';
 
 export default class Cache<T> implements CacheInterface<T> {
     private items: {
         [key: string]: T
     } = {};
 
-    get(key: string, value: Function): T {
+    public get(key: string, value: Function): T {
         if (this.items[key])
             return this.items[key];
 
@@ -14,7 +14,7 @@ export default class Cache<T> implements CacheInterface<T> {
         return this.items[key];
     }
 
-    set(key: string, value: T): void {
+    public set(key: string, value: T): void {
         this.items[key] = value;
     }
 };

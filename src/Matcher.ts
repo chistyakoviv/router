@@ -6,7 +6,7 @@ import Cache from './Cache';
 export default class Matcher implements MatcherInterface {
     private cache: CacheInterface<Function> = new Cache<Function>();
 
-    match(path: string, params?: object): string {
+    public match(path: string, params?: object): string {
         try {
             const filler = this.cache.get(path, () => compile(path));
 
