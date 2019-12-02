@@ -1,0 +1,25 @@
+{
+    "name": "router",
+    "version": "1.0.0",
+    "description": "router for frontend",
+    "main": "dist/router.js",
+    "scripts": {
+        "tsc": "tsc",
+        "dev": "webpack-dev-server --open --config ./examples/webpack.config.js",
+        "build": "rollup -wm -c ./config/rollup.config.js"
+    },
+    "author": "Chistyakov Ilya",
+    "license": "MIT",
+    "dependencies": {},
+    "devDependencies": {
+        "path-to-regexp": "^6.1.0",
+        "rollup": "^1.27.8",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "rollup-plugin-typescript": "^1.0.1",
+        "ts-loader": "^6.2.1",
+        "typescript": "^3.7.2",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10",
+        "webpack-dev-server": "^3.9.0"
+    }
+}
