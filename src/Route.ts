@@ -19,7 +19,7 @@ export default class Route {
 
         if (!matched) return null;
 
-        return { path: matched.path, route: this, params: matched.params };
+        return { matchedPath: matched.path, route: this, params: matched.params };
     }
 
     getPath(): string {

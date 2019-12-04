@@ -12,14 +12,14 @@ export default class RouteCollection {
         }
     }
 
-    match(path: string): RouteMatch | null {
+    match(path: string): RouteMatch {
         for (let i = 0; i < this.routes.length; i++) {
             const match = this.routes[i].match(path);
 
             if (match) return match;
         }
 
-        return null;
+        return {};
     }
 
     find(name: string): Route | null {

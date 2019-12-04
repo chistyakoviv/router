@@ -554,6 +554,7 @@ var RouteCollection = /** @class */ (function () {
     };
     return RouteCollection;
 }());
+//# sourceMappingURL=RouteCollection.js.map
 
 var Location = /** @class */ (function () {
     function Location(path, normalized, route, params, query, hash) {
@@ -613,9 +614,6 @@ var UrlHelper = /** @class */ (function () {
         var path = decodeURI(window.location.pathname);
         return (path || '/') + window.location.search + window.location.hash;
     };
-    UrlHelper.normalize = function (path) {
-        return '';
-    };
     UrlHelper.parsePath = function (path) {
         var hash = '';
         var query = '';
@@ -629,11 +627,7 @@ var UrlHelper = /** @class */ (function () {
             query = path.slice(queryIndex + 1);
             path = path.slice(0, queryIndex);
         }
-        return {
-            path: path,
-            query: query,
-            hash: hash
-        };
+        return { path: path, query: query, hash: hash };
     };
     return UrlHelper;
 }());
@@ -705,10 +699,9 @@ var Router = /** @class */ (function () {
         return this.resolve(destination) || Location.createDefault();
     };
     Router.prototype.transitionTo = function (location) {
-        var handler = location.getHandler();
-        if (handler)
-            handler(location);
         this.location = location;
+        var handler = location.getHandler();
+        handler && handler(location);
     };
     Router.prototype.resolve = function (destination) {
         if (destination.name) {
@@ -751,7 +744,6 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
-//# sourceMappingURL=Router.js.map
 
 module.exports = Router;
 //# sourceMappingURL=router.js.map

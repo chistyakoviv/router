@@ -30,9 +30,9 @@ export default class Location {
         return this.route ? this.route : null;
     }
 
-    getHandler(): Function | null {
+    apply(): void {
         const handler = this.route && this.route.getHandler();
-        return handler ? handler : null;
+        handler && handler(this);
     }
 
     getParams(): object | null {

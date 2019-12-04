@@ -24,13 +24,11 @@ export default class Router implements RouterInterface {
         this.location = this.ensureLocation();
 
         this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
-
-        this.transitionTo(this.location);
+        this.location.apply();
     }
 
     private onLocationChange: (destination: RawLocation) => void = (destination: RawLocation) => {
         const location = this.ensureLocation(destination);
-
         this.transitionTo(location);
     }
 
@@ -42,11 +40,8 @@ export default class Router implements RouterInterface {
     }
 
     private transitionTo(location: Location): void {
-        const handler = location.getHandler();
-
-        if (handler) handler(location);
-
         this.location = location;
+        this.location.apply();
     }
 
     private resolve(destination: RawLocation): Location | null {
@@ -61,9 +56,7 @@ export default class Router implements RouterInterface {
         if (!destination.path) return null;
 
         const { path, query, hash } = UrlHelper.parsePath(destination.path);
-        const match = this.routes.match(path);
-        const route = match ? match.route : undefined;
-        const params = match ? match.params : undefined;
+        const { matchedPath, route, params } = this.routes.match(path);
 
         return new Location(destination.path, path, route, params, query, hash);
     }

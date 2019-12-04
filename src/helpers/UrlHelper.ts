@@ -4,30 +4,24 @@ export default class UrlHelper {
         return (path || '/') + window.location.search + window.location.hash;
     }
 
-    static normalize(path: string) {
-        return '';
-    }
-
     static parsePath (path: string): { path: string; query: string; hash: string; } {
         let hash = '';
         let query = '';
 
         const hashIndex = path.indexOf('#');
+
         if (~hashIndex) {
             hash = path.slice(hashIndex);
             path = path.slice(0, hashIndex);
         }
 
         const queryIndex = path.indexOf('?');
+
         if (~queryIndex) {
             query = path.slice(queryIndex + 1);
             path = path.slice(0, queryIndex);
         }
 
-        return {
-            path,
-            query,
-            hash
-        };
+        return { path, query, hash };
     }
 };
