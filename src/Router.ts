@@ -66,7 +66,7 @@ export default class Router implements RouterInterface {
             const location = this.resolve(destination);
 
             if (!location) {
-                return reject(new Error('Impossible to push location: incorrect params.'));
+                return reject(new Error(`Can't push location: incorrect params.`));
             }
 
             try {
