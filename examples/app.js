@@ -10,6 +10,7 @@ function app() {
         },
         {
             path: '/hello/:id',
+            name: 'hello',
             handler: function(location) {
                 console.log('hello handler');
             }
@@ -18,7 +19,7 @@ function app() {
     router.push({ path: '/hello/1?param[]=1&param[]=2' }).then(location => {
         console.log(location);
 
-        router.push({ path: '/hello/2' }).then(location => {
+        router.push({ name: 'hello', params: { id: 2 } }).then(location => {
             console.log(location);
         });
     });

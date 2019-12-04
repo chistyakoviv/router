@@ -8,7 +8,7 @@ export default class RouteCollection {
 
     constructor(routes: Array<RouteConfig>) {
         for (let i = 0; i < routes.length; i++) {
-            this.routes.push(new Route(routes[i].path, routes[i].handler));
+            this.routes.push(new Route(routes[i].path, routes[i].handler, routes[i].name));
         }
     }
 

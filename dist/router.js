@@ -534,7 +534,7 @@ var RouteCollection = /** @class */ (function () {
     function RouteCollection(routes) {
         this.routes = [];
         for (var i = 0; i < routes.length; i++) {
-            this.routes.push(new Route(routes[i].path, routes[i].handler));
+            this.routes.push(new Route(routes[i].path, routes[i].handler, routes[i].name));
         }
     }
     RouteCollection.prototype.match = function (path) {
@@ -554,7 +554,6 @@ var RouteCollection = /** @class */ (function () {
     };
     return RouteCollection;
 }());
-//# sourceMappingURL=RouteCollection.js.map
 
 var Location = /** @class */ (function () {
     function Location(path, normalized, route, params, query, hash) {
@@ -752,6 +751,7 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
+//# sourceMappingURL=Router.js.map
 
 module.exports = Router;
 //# sourceMappingURL=router.js.map
