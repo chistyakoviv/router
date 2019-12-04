@@ -3,9 +3,15 @@ import Router from '../dist/router';
 function app() {
     const router = new Router([
         {
+            path: '/',
+            handler: function() {
+                console.log('home handler');
+            }
+        },
+        {
             path: '/hello/:id',
             handler: function(location) {
-                console.log('handler');
+                console.log('hello handler');
             }
         }
     ]);

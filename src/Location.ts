@@ -2,13 +2,16 @@ import Route from './Route';
 
 export default class Location {
     private path: string;
+    private normalized: string;
     private route?: Route;
     private params?: object;
     private query?: string;
     private hash?: string;
+    private parsedQuery?: { [key: string]: string };
 
-    constructor(path: string, route?: Route, params?: object, query?: string, hash?: string) {
+    constructor(path: string, normalized: string, route?: Route, params?: object, query?: string, hash?: string) {
         this.path = path;
+        this.normalized = normalized;
         this.route = route;
         this.params = params;
         this.query = query;
@@ -17,6 +20,10 @@ export default class Location {
 
     getPath(): string {
         return this.path;
+    }
+
+    getNormalizedPath(): string {
+        return this.normalized;
     }
 
     getRoute(): Route | null {
@@ -37,11 +44,27 @@ export default class Location {
         return name ? name : null;
     }
 
-    getQuery(): string | null {
-        return this.query ? this.query : null;
+    getQuery(): object {
+        if (this.parsedQuery)
+            return this.parsedQuery;
+
+        const query: { [key: string]: string } = {};
+
+        if (this.query) {
+            this.query.split('&').forEach(param => {
+                const parts = param.split('=');
+                query[parts[0]] = parts[1];
+            });
+        }
+
+        return this.parsedQuery = query;
     }
 
     getHash(): string | null {
         return this.hash ? this.hash : null;
+    }
+
+    static createDefault(): Location {
+        return new Location('/', '/');
     }
 };

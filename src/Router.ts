@@ -15,18 +15,38 @@ export default class Router implements RouterInterface {
     private history: HistoryApi;
     private resolver: ResolverInterface;
     private routes: RouteCollection;
-    private location?: Location;
+    private location: Location;
 
-    constructor(routes: Array<RouteConfig>, history: HistoryApi = new HTML5History()) {
+    constructor(routes: Array<RouteConfig>, history: HistoryApi = new HTML5History(), resolver: ResolverInterface = new Resolver()) {
         this.history = history;
-        this.resolver = new Resolver();
+        this.resolver = resolver;
         this.routes = new RouteCollection(routes);
+        this.location = this.ensureLocation();
 
         this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
+
+        this.transitionTo(this.location);
     }
 
     private onLocationChange: (destination: RawLocation) => void = (destination: RawLocation) => {
-        const location = this.resolve(destination);
+        const location = this.ensureLocation(destination);
+
+        this.transitionTo(location);
+    }
+
+    private ensureLocation(destination?: RawLocation): Location {
+        if (!destination)
+            return this.resolve({ path: UrlHelper.getLocation() }) || Location.createDefault();
+
+        return this.resolve(destination) || Location.createDefault();
+    }
+
+    private transitionTo(location: Location): void {
+        const handler = location.getHandler();
+
+        if (handler) handler(location);
+
+        this.location = location;
     }
 
     private resolve(destination: RawLocation): Location | null {
@@ -45,7 +65,7 @@ export default class Router implements RouterInterface {
         const route = match ? match.route : undefined;
         const params = match ? match.params : undefined;
 
-        return new Location(path, route, params, query, hash);
+        return new Location(destination.path, path, route, params, query, hash);
     }
 
     async push(destination: RawLocation): Promise<any> {
@@ -58,11 +78,15 @@ export default class Router implements RouterInterface {
 
             try {
                 this.history.push(location.getPath());
-                this.location = location;
+                this.transitionTo(location);
                 resolve(location);
             } catch (err) {
                 reject(err);
             }
         });
+    }
+
+    getLocation(): Location {
+        return this.location;
     }
 };

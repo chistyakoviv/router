@@ -557,8 +557,9 @@ var RouteCollection = /** @class */ (function () {
 //# sourceMappingURL=RouteCollection.js.map
 
 var Location = /** @class */ (function () {
-    function Location(path, route, params, query, hash) {
+    function Location(path, normalized, route, params, query, hash) {
         this.path = path;
+        this.normalized = normalized;
         this.route = route;
         this.params = params;
         this.query = query;
@@ -566,6 +567,9 @@ var Location = /** @class */ (function () {
     }
     Location.prototype.getPath = function () {
         return this.path;
+    };
+    Location.prototype.getNormalizedPath = function () {
+        return this.normalized;
     };
     Location.prototype.getRoute = function () {
         return this.route ? this.route : null;
@@ -582,10 +586,22 @@ var Location = /** @class */ (function () {
         return name ? name : null;
     };
     Location.prototype.getQuery = function () {
-        return this.query ? this.query : null;
+        if (this.parsedQuery)
+            return this.parsedQuery;
+        var query = {};
+        if (this.query) {
+            this.query.split('&').forEach(function (param) {
+                var parts = param.split('=');
+                query[parts[0]] = parts[1];
+            });
+        }
+        return this.parsedQuery = query;
     };
     Location.prototype.getHash = function () {
         return this.hash ? this.hash : null;
+    };
+    Location.createDefault = function () {
+        return new Location('/', '/');
     };
     return Location;
 }());
@@ -669,17 +685,32 @@ var HTML5History = /** @class */ (function (_super) {
 //# sourceMappingURL=HTML5History.js.map
 
 var Router = /** @class */ (function () {
-    function Router(routes, history) {
+    function Router(routes, history, resolver) {
         var _this = this;
         if (history === void 0) { history = new HTML5History(); }
+        if (resolver === void 0) { resolver = new Resolver(); }
         this.onLocationChange = function (destination) {
-            var location = _this.resolve(destination);
+            var location = _this.ensureLocation(destination);
+            _this.transitionTo(location);
         };
         this.history = history;
-        this.resolver = new Resolver();
+        this.resolver = resolver;
         this.routes = new RouteCollection(routes);
+        this.location = this.ensureLocation();
         this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
+        this.transitionTo(this.location);
     }
+    Router.prototype.ensureLocation = function (destination) {
+        if (!destination)
+            return this.resolve({ path: UrlHelper.getLocation() }) || Location.createDefault();
+        return this.resolve(destination) || Location.createDefault();
+    };
+    Router.prototype.transitionTo = function (location) {
+        var handler = location.getHandler();
+        if (handler)
+            handler(location);
+        this.location = location;
+    };
     Router.prototype.resolve = function (destination) {
         if (destination.name) {
             var route_1 = this.routes.find(destination.name);
@@ -693,7 +724,7 @@ var Router = /** @class */ (function () {
         var match = this.routes.match(path);
         var route = match ? match.route : undefined;
         var params = match ? match.params : undefined;
-        return new Location(path, route, params, query, hash);
+        return new Location(destination.path, path, route, params, query, hash);
     };
     Router.prototype.push = function (destination) {
         return __awaiter(this, void 0, Promise, function () {
@@ -706,7 +737,7 @@ var Router = /** @class */ (function () {
                         }
                         try {
                             _this.history.push(location.getPath());
-                            _this.location = location;
+                            _this.transitionTo(location);
                             resolve(location);
                         }
                         catch (err) {
@@ -715,6 +746,9 @@ var Router = /** @class */ (function () {
                     })];
             });
         });
+    };
+    Router.prototype.getLocation = function () {
+        return this.location;
     };
     return Router;
 }());
