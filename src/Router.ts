@@ -1,31 +1,41 @@
 import RouterInterface from './interfaces/RouterInterface';
-import Matcher from './Matcher';
-import MatcherInterface from './interfaces/MatcherInterface';
+import HistoryApi from './interfaces/HistoryApi';
+
 import RouteCollection from './RouteCollection';
 import RouteConfig from './interfaces/RouteConfig';
-import Ajax from './Ajax';
+import Location from './Location';
+
+import HTML5History from './history/HTML5History';
 
 export default class Router implements RouterInterface {
-    private matcher: MatcherInterface;
+    private history: HistoryApi;
     private routes: RouteCollection;
 
-    constructor(routes: Array<RouteConfig>, matcher: MatcherInterface = new Matcher()) {
-        this.matcher = matcher;
+    constructor(routes: Array<RouteConfig>, history: HistoryApi = new HTML5History()) {
+        this.history = history;
         this.routes = new RouteCollection(routes);
+
+        this.init();
     }
 
-    public match(path: string): string {
-        return this.matcher.match(path);
+    private init(): void {
+
     }
 
-    async to(path: string): Promise<any> {
-        const location = this.routes.match(path);
+    async push(path: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const match = this.routes.match(path);
+            const routePath = match ? match.path : path;
+            const route = match ? match.route : undefined;
+            const params = match ? match.params : undefined;
+            const location = new Location(routePath, route, params);
 
-        if (!location) return Promise.reject(new Error('No route matched.'));
-
-        return await Ajax.get(location.getPath())
-                        .then(data => {
-                            return {data, location};
-                        });
+            try {
+                this.history.push(location);
+                resolve(location);
+            } catch (err) {
+                reject(err);
+            }
+        });
     }
 };

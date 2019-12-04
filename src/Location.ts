@@ -2,32 +2,34 @@ import Route from './Route';
 
 export default class Location {
     private path: string;
-    private route: Route;
+    private route?: Route;
     private params?: object;
 
-    constructor(path: string, route: Route, params?: object) {
+    constructor(path: string, route?: Route, params?: object) {
         this.path = path;
         this.route = route;
         this.params = params;
     }
 
-    public getPath(): string {
+    getPath(): string {
         return this.path;
     }
 
-    public getRoute(): Route {
-        return this.route;
+    getRoute(): Route | null {
+        return this.route ? this.route : null;
     }
 
-    public getComponent(): Function | undefined {
-        return this.route.getComponent();
+    getHandler(): Function | null {
+        const handler = this.route && this.route.getHandler();
+        return handler ? handler : null;
     }
 
-    public getParams(): object | undefined {
-        return this.params;
+    getParams(): object | null {
+        return this.params ? this.params : null;
     }
 
-    public getName(): string | undefined {
-        return this.route.getName();
+    getName(): string | null {
+        const name = this.route && this.route.getName();
+        return name ? name : null;
     }
 };

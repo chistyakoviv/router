@@ -1,6 +1,6 @@
 import Route from './Route';
 import RouteConfig from './interfaces/RouteConfig';
-import Location from './Location';
+import RouteMatch from './interfaces/RouteMatch';
 
 export default class RouteCollection {
     private routes: Array<Route> = [];
@@ -11,11 +11,11 @@ export default class RouteCollection {
         }
     }
 
-    public match(path: string): Location | null {
+    match(path: string): RouteMatch | null {
         for (let i = 0; i < this.routes.length; i++) {
-            const location = this.routes[i].match(path);
+            const match = this.routes[i].match(path);
 
-            if (location) return location;
+            if (match) return match;
         }
 
         return null;

@@ -1,40 +1,32 @@
 import { match } from 'path-to-regexp';
-import Location from './Location';
+import RouteMatch from './interfaces/RouteMatch';
 
 export default class Route {
     private path: string;
     private matcher: Function;
     private name?: string;
-    private component?: Function;
-    private beforeRequest?: Function;
-    private afterRequest?: Function;
+    private handler?: Function;
 
-    constructor(path: string) {
+    constructor(path: string, handler?: Function, name?: string) {
         this.path = path;
+        this.name = name;
+        this.handler = handler;
         this.matcher = match(this.path, { decode: decodeURIComponent });
     }
 
-    public match(path: string): Location | null {
+    match(path: string): RouteMatch | null {
         const matched = this.matcher(path);
 
         if (!matched) return null;
 
-        return new Location(matched.path, this, matched.params);
+        return { path: matched.path, route: this, params: matched.params };
     }
 
-    public getName(): string | undefined {
-        return this.name;
+    getName(): string | null {
+        return this.name ? this.name : null;
     }
 
-    public getComponent(): Function | undefined {
-        return this.component;
-    }
-
-    public getBeforeRequest(): Function | undefined {
-        return this.beforeRequest;
-    }
-
-    public getAfterRequest(): Function | undefined {
-        return this.afterRequest;
+    getHandler(): Function | null {
+        return this.handler ? this.handler : null;
     }
 };
