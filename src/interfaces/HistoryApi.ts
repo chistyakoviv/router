@@ -1,11 +1,9 @@
-import Location from '../Location';
+import EventEmitter from './EventEmitter';
 
 export enum HistoryEvents { POPSTATE = 'popstate' };
 
-export default interface HistoryApi {
+export default interface HistoryApi extends EventEmitter {
     go(n: number): void;
-    push(location: Location): void;
-    replace(location: Location): void;
-    on(name: HistoryEvents, callback: Function): void;
-    off(name: HistoryEvents, callback: Function): void;
+    push(path: string): void;
+    replace(path: string): void;
 };

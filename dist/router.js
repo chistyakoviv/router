@@ -14,6 +14,20 @@ MERCHANTABLITY OR NON-INFRINGEMENT.
 See the Apache Version 2.0 License for specific language governing permissions
 and limitations under the License.
 ***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
 
 function __awaiter(thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -51,6 +65,12 @@ function __generator(thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 }
+
+var HistoryEvents;
+(function (HistoryEvents) {
+    HistoryEvents["POPSTATE"] = "popstate";
+})(HistoryEvents || (HistoryEvents = {}));
+//# sourceMappingURL=HistoryApi.js.map
 
 /**
  * Tokenize input string.
@@ -467,11 +487,11 @@ var Cache = /** @class */ (function () {
 }());
 //# sourceMappingURL=Cache.js.map
 
-var Matcher = /** @class */ (function () {
-    function Matcher() {
+var Resolver = /** @class */ (function () {
+    function Resolver() {
         this.cache = new Cache();
     }
-    Matcher.prototype.match = function (path, params) {
+    Resolver.prototype.resolve = function (path, params) {
         try {
             var filler = this.cache.get(path, function () { return compile(path); });
             return filler(params || {}, { pretty: true });
@@ -480,56 +500,31 @@ var Matcher = /** @class */ (function () {
             throw new Error("Missing param for route " + path + ": " + e.message);
         }
     };
-    return Matcher;
+    return Resolver;
 }());
-//# sourceMappingURL=Matcher.js.map
-
-var Location = /** @class */ (function () {
-    function Location(path, route, params) {
-        this.path = path;
-        this.route = route;
-        this.params = params;
-    }
-    Location.prototype.getPath = function () {
-        return this.path;
-    };
-    Location.prototype.getRoute = function () {
-        return this.route;
-    };
-    Location.prototype.getComponent = function () {
-        return this.route.getComponent();
-    };
-    Location.prototype.getParams = function () {
-        return this.params;
-    };
-    Location.prototype.getName = function () {
-        return this.route.getName();
-    };
-    return Location;
-}());
+//# sourceMappingURL=Resolver.js.map
 
 var Route = /** @class */ (function () {
-    function Route(path) {
+    function Route(path, handler, name) {
         this.path = path;
+        this.name = name;
+        this.handler = handler;
         this.matcher = match(this.path, { decode: decodeURIComponent });
     }
     Route.prototype.match = function (path) {
         var matched = this.matcher(path);
         if (!matched)
             return null;
-        return new Location(matched.path, this, matched.params);
+        return { path: matched.path, route: this, params: matched.params };
+    };
+    Route.prototype.getPath = function () {
+        return this.path;
     };
     Route.prototype.getName = function () {
-        return this.name;
+        return this.name ? this.name : null;
     };
-    Route.prototype.getComponent = function () {
-        return this.component;
-    };
-    Route.prototype.getBeforeRequest = function () {
-        return this.beforeRequest;
-    };
-    Route.prototype.getAfterRequest = function () {
-        return this.afterRequest;
+    Route.prototype.getHandler = function () {
+        return this.handler ? this.handler : null;
     };
     return Route;
 }());
@@ -539,14 +534,21 @@ var RouteCollection = /** @class */ (function () {
     function RouteCollection(routes) {
         this.routes = [];
         for (var i = 0; i < routes.length; i++) {
-            this.routes.push(new Route(routes[i].path));
+            this.routes.push(new Route(routes[i].path, routes[i].handler));
         }
     }
     RouteCollection.prototype.match = function (path) {
         for (var i = 0; i < this.routes.length; i++) {
-            var location = this.routes[i].match(path);
-            if (location)
-                return location;
+            var match = this.routes[i].match(path);
+            if (match)
+                return match;
+        }
+        return null;
+    };
+    RouteCollection.prototype.find = function (name) {
+        for (var i = 0; i < this.routes.length; i++) {
+            if (this.routes[i].getName() === name)
+                return this.routes[i];
         }
         return null;
     };
@@ -554,60 +556,168 @@ var RouteCollection = /** @class */ (function () {
 }());
 //# sourceMappingURL=RouteCollection.js.map
 
-var Ajax = /** @class */ (function () {
-    function Ajax() {
+var Location = /** @class */ (function () {
+    function Location(path, route, params, query, hash) {
+        this.path = path;
+        this.route = route;
+        this.params = params;
+        this.query = query;
+        this.hash = hash;
     }
-    Ajax.get = function (url) {
-        return Ajax._fetch(url);
+    Location.prototype.getPath = function () {
+        return this.path;
     };
-    Ajax._fetch = function (url, method, body) {
-        if (method === void 0) { method = 'GET'; }
-        if (body === void 0) { body = null; }
-        return fetch(url, {
-            method: method,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: body
-        })
-            .then(function (result) {
-            return result.json();
-        });
+    Location.prototype.getRoute = function () {
+        return this.route ? this.route : null;
     };
-    return Ajax;
+    Location.prototype.getHandler = function () {
+        var handler = this.route && this.route.getHandler();
+        return handler ? handler : null;
+    };
+    Location.prototype.getParams = function () {
+        return this.params ? this.params : null;
+    };
+    Location.prototype.getName = function () {
+        var name = this.route && this.route.getName();
+        return name ? name : null;
+    };
+    Location.prototype.getQuery = function () {
+        return this.query ? this.query : null;
+    };
+    Location.prototype.getHash = function () {
+        return this.hash ? this.hash : null;
+    };
+    return Location;
 }());
-//# sourceMappingURL=Ajax.js.map
+//# sourceMappingURL=Location.js.map
+
+var UrlHelper = /** @class */ (function () {
+    function UrlHelper() {
+    }
+    UrlHelper.getLocation = function () {
+        var path = decodeURI(window.location.pathname);
+        return (path || '/') + window.location.search + window.location.hash;
+    };
+    UrlHelper.normalize = function (path) {
+        return '';
+    };
+    UrlHelper.parsePath = function (path) {
+        var hash = '';
+        var query = '';
+        var hashIndex = path.indexOf('#');
+        if (~hashIndex) {
+            hash = path.slice(hashIndex);
+            path = path.slice(0, hashIndex);
+        }
+        var queryIndex = path.indexOf('?');
+        if (~queryIndex) {
+            query = path.slice(queryIndex + 1);
+            path = path.slice(0, queryIndex);
+        }
+        return {
+            path: path,
+            query: query,
+            hash: hash
+        };
+    };
+    return UrlHelper;
+}());
+//# sourceMappingURL=UrlHelper.js.map
+
+var BaseHistory = /** @class */ (function () {
+    function BaseHistory() {
+        var _a;
+        this.events = (_a = {}, _a[HistoryEvents.POPSTATE] = [], _a);
+    }
+    BaseHistory.prototype.go = function (n) { };
+    BaseHistory.prototype.push = function (path) { };
+    BaseHistory.prototype.replace = function (path) { };
+    BaseHistory.prototype.on = function (name, callback) {
+        this.events[name].push(callback);
+    };
+    BaseHistory.prototype.off = function (name, callback) {
+        var index = this.events[name].indexOf(callback);
+        if (~index) {
+            this.events[name].splice(index, 1);
+        }
+    };
+    return BaseHistory;
+}());
+//# sourceMappingURL=BaseHistory.js.map
+
+var HTML5History = /** @class */ (function (_super) {
+    __extends(HTML5History, _super);
+    function HTML5History() {
+        var _this = _super.call(this) || this;
+        _this.onLocationChange = function (e) {
+            var location = UrlHelper.getLocation();
+            _this.events[HistoryEvents.POPSTATE].forEach(function (callback) { return callback({ path: location }); });
+        };
+        window.addEventListener('popstate', _this.onLocationChange);
+        return _this;
+    }
+    HTML5History.prototype.go = function (n) {
+        window.history.go(n);
+    };
+    HTML5History.prototype.push = function (path) {
+        window.history.pushState({}, '', path);
+    };
+    HTML5History.prototype.replace = function (path) {
+    };
+    return HTML5History;
+}(BaseHistory));
+//# sourceMappingURL=HTML5History.js.map
 
 var Router = /** @class */ (function () {
-    function Router(routes, matcher) {
-        if (matcher === void 0) { matcher = new Matcher(); }
-        this.matcher = matcher;
+    function Router(routes, history) {
+        var _this = this;
+        if (history === void 0) { history = new HTML5History(); }
+        this.onLocationChange = function (destination) {
+            var location = _this.resolve(destination);
+        };
+        this.history = history;
+        this.resolver = new Resolver();
         this.routes = new RouteCollection(routes);
+        this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
     }
-    Router.prototype.match = function (path) {
-        return this.matcher.match(path);
+    Router.prototype.resolve = function (destination) {
+        if (destination.name) {
+            var route_1 = this.routes.find(destination.name);
+            if (!route_1)
+                return null;
+            destination.path = this.resolver.resolve(route_1.getPath(), destination.params);
+        }
+        if (!destination.path)
+            return null;
+        var _a = UrlHelper.parsePath(destination.path), path = _a.path, query = _a.query, hash = _a.hash;
+        var match = this.routes.match(path);
+        var route = match ? match.route : undefined;
+        var params = match ? match.params : undefined;
+        return new Location(path, route, params, query, hash);
     };
-    Router.prototype.to = function (path) {
+    Router.prototype.push = function (destination) {
         return __awaiter(this, void 0, Promise, function () {
-            var location;
+            var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        location = this.routes.match(path);
-                        if (!location)
-                            return [2 /*return*/, Promise.reject(new Error('No route matched.'))];
-                        return [4 /*yield*/, Ajax.get(location.getPath())
-                                .then(function (data) {
-                                return { data: data, location: location };
-                            })];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        var location = _this.resolve(destination);
+                        if (!location) {
+                            return reject(new Error('Impossible to push location: incorrect params.'));
+                        }
+                        try {
+                            _this.history.push(location.getPath());
+                            _this.location = location;
+                            resolve(location);
+                        }
+                        catch (err) {
+                            reject(err);
+                        }
+                    })];
             });
         });
     };
     return Router;
 }());
-//# sourceMappingURL=Router.js.map
 
 module.exports = Router;
 //# sourceMappingURL=router.js.map

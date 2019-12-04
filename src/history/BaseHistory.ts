@@ -1,5 +1,4 @@
 import HistoryApi, { HistoryEvents } from "../interfaces/HistoryApi";
-import Location from '../Location';
 
 export default class BaseHistory implements HistoryApi {
     protected location?: Location;
@@ -8,14 +7,14 @@ export default class BaseHistory implements HistoryApi {
     } = { [HistoryEvents.POPSTATE]: [] };
 
     go(n: number) {}
-    push(locaton: Location): void {}
-    replace(location: Location): void {}
+    push(path: string): void {}
+    replace(path: string): void {}
 
-    on(name: HistoryEvents, callback: Function) {
+    on(name: HistoryEvents, callback: Function): void {
         this.events[name].push(callback);
     }
 
-    off(name: HistoryEvents, callback: Function) {
+    off(name: HistoryEvents, callback: Function): void {
         const index = this.events[name].indexOf(callback);
 
         if (~index) {

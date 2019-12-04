@@ -5,7 +5,7 @@
     "main": "dist/router.js",
     "scripts": {
         "tsc": "tsc",
-        "dev": "webpack-dev-server --open --config ./examples/webpack.config.js",
+        "dev": "webpack-dev-server --open --config ./config/webpack.config.js",
         "build": "rollup -wm -c ./config/rollup.config.js"
     },
     "author": "Chistyakov Ilya",

@@ -22,6 +22,10 @@ export default class Route {
         return { path: matched.path, route: this, params: matched.params };
     }
 
+    getPath(): string {
+        return this.path;
+    }
+
     getName(): string | null {
         return this.name ? this.name : null;
     }

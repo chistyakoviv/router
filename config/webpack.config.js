@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     entry: './examples/app.js',
     devServer: {
-        contentBase: __dirname,
+        contentBase: path.resolve(__dirname, '../examples'),
         overlay: {
             warnings: true,
             errors: true

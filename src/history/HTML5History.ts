@@ -1,13 +1,12 @@
 import HistoryApi, { HistoryEvents } from '../interfaces/HistoryApi';
-import Location from '../Location';
 import UrlHelper from '../helpers/UrlHelper';
 import BaseHistory from './BaseHistory';
 
 export default class HTML5History extends BaseHistory implements HistoryApi {
 
     private onLocationChange: (e: Event) => void = (e: Event) => {
-        this.transitionTo(UrlHelper.getLocation());
-        this.events[HistoryEvents.POPSTATE].forEach(callback => callback());
+        const location = UrlHelper.getLocation();
+        this.events[HistoryEvents.POPSTATE].forEach(callback => callback({ path: location }));
     }
 
     constructor() {
@@ -20,15 +19,11 @@ export default class HTML5History extends BaseHistory implements HistoryApi {
         window.history.go(n);
     }
 
-    push(locaton: Location): void {
-
+    push(path: string): void {
+        window.history.pushState({}, '', path);
     }
 
-    replace(location: Location): void {
+    replace(path: string): void {
 
-    }
-
-    private transitionTo(path: string): void {
-        this.location = new Location(path);
     }
 };
