@@ -17,7 +17,7 @@ export default class Router implements RouterInterface {
     private routes: RouteCollection;
     private location: Location;
 
-    constructor(routes: Array<RouteConfig>, history: HistoryApi = new HTML5History(), resolver: ResolverInterface = new Resolver()) {
+    constructor(routes: RouteConfig[], history: HistoryApi = new HTML5History(), resolver: ResolverInterface = new Resolver()) {
         this.history = history;
         this.resolver = resolver;
         this.routes = new RouteCollection(routes);
