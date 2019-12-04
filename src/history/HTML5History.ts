@@ -5,8 +5,7 @@ import BaseHistory from './BaseHistory';
 export default class HTML5History extends BaseHistory implements HistoryApi {
 
     private onLocationChange: (e: Event) => void = (e: Event) => {
-        const location = UrlHelper.getLocation();
-        this.events[HistoryEvents.POPSTATE].forEach(callback => callback({ path: location }));
+        this.events[HistoryEvents.POPSTATE].forEach(cb => cb({ path: UrlHelper.getPath() }));
     }
 
     constructor() {

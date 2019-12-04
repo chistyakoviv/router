@@ -34,7 +34,7 @@ export default class Router implements RouterInterface {
 
     private ensureLocation(destination?: RawLocation): Location {
         if (!destination)
-            return this.resolve({ path: UrlHelper.getLocation() }) || Location.createDefault();
+            return this.resolve({ path: UrlHelper.getPath() }) || Location.createDefault();
 
         return this.resolve(destination) || Location.createDefault();
     }
