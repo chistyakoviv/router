@@ -6,6 +6,32 @@ var HistoryEvents;
 })(HistoryEvents || (HistoryEvents = {}));
 //# sourceMappingURL=HistoryApi.js.map
 
+var UrlHelper = /** @class */ (function () {
+    function UrlHelper() {
+    }
+    UrlHelper.getPath = function () {
+        var path = decodeURI(window.location.pathname);
+        return (path || '/') + window.location.search + window.location.hash;
+    };
+    UrlHelper.parsePath = function (path) {
+        var hash = '';
+        var query = '';
+        var hashIndex = path.indexOf('#');
+        if (~hashIndex) {
+            hash = path.slice(hashIndex);
+            path = path.slice(0, hashIndex);
+        }
+        var queryIndex = path.indexOf('?');
+        if (~queryIndex) {
+            query = path.slice(queryIndex + 1);
+            path = path.slice(0, queryIndex);
+        }
+        return { path: path, query: query, hash: hash };
+    };
+    return UrlHelper;
+}());
+//# sourceMappingURL=UrlHelper.js.map
+
 /**
  * Tokenize input string.
  */
@@ -491,9 +517,9 @@ var RouteCollection = /** @class */ (function () {
 //# sourceMappingURL=RouteCollection.js.map
 
 var Location = /** @class */ (function () {
-    function Location(path, normalized, route, params, query, hash) {
+    function Location(path, normalizedPath, route, params, query, hash) {
         this.path = path;
-        this.normalized = normalized;
+        this.normalizedPath = normalizedPath;
         this.route = route;
         this.params = params;
         this.query = query;
@@ -503,7 +529,7 @@ var Location = /** @class */ (function () {
         return this.path;
     };
     Location.prototype.getNormalizedPath = function () {
-        return this.normalized;
+        return this.normalizedPath;
     };
     Location.prototype.getRoute = function () {
         return this.route ? this.route : null;
@@ -539,7 +565,6 @@ var Location = /** @class */ (function () {
     };
     return Location;
 }());
-//# sourceMappingURL=Location.js.map
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -569,32 +594,6 @@ function __extends(d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 }
-
-var UrlHelper = /** @class */ (function () {
-    function UrlHelper() {
-    }
-    UrlHelper.getPath = function () {
-        var path = decodeURI(window.location.pathname);
-        return (path || '/') + window.location.search + window.location.hash;
-    };
-    UrlHelper.parsePath = function (path) {
-        var hash = '';
-        var query = '';
-        var hashIndex = path.indexOf('#');
-        if (~hashIndex) {
-            hash = path.slice(hashIndex);
-            path = path.slice(0, hashIndex);
-        }
-        var queryIndex = path.indexOf('?');
-        if (~queryIndex) {
-            query = path.slice(queryIndex + 1);
-            path = path.slice(0, queryIndex);
-        }
-        return { path: path, query: query, hash: hash };
-    };
-    return UrlHelper;
-}());
-//# sourceMappingURL=UrlHelper.js.map
 
 var BaseHistory = /** @class */ (function () {
     function BaseHistory() {
@@ -735,6 +734,7 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
+//# sourceMappingURL=Router.js.map
 
 module.exports = Router;
 //# sourceMappingURL=router.js.map

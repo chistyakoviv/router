@@ -1,20 +1,17 @@
 import RouterInterface from './interfaces/RouterInterface';
 import ResolverInterface from './interfaces/ResolverInterface';
 import HistoryApi, { HistoryEvents } from './interfaces/HistoryApi';
-
-import Resolver from './Resolver';
-import RouteCollection from './RouteCollection';
 import RouteConfig from './interfaces/RouteConfig';
 import RawLocation from './interfaces/RawLocation';
-import Location from './Location';
-
-import HTML5History from './history/HTML5History';
 import UrlHelper from './helpers/UrlHelper';
+import Resolver from './Resolver';
+import RouteCollection from './RouteCollection';
+import Location from './Location';
+import HTML5History from './history/HTML5History';
 
 /*!
  * @author Chistyakov Ilya <ichistyakovv@gmail.com>
  */
-
 export default class Router implements RouterInterface {
     private history: HistoryApi;
     private resolver: ResolverInterface;

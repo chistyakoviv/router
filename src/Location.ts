@@ -2,16 +2,16 @@ import Route from './Route';
 
 export default class Location {
     private path: string;
-    private normalized: string;
+    private normalizedPath: string;
     private route?: Route;
     private params?: object;
     private query?: string;
     private hash?: string;
     private parsedQuery?: { [key: string]: string };
 
-    constructor(path: string, normalized: string, route?: Route, params?: object, query?: string, hash?: string) {
+    constructor(path: string, normalizedPath: string, route?: Route, params?: object, query?: string, hash?: string) {
         this.path = path;
-        this.normalized = normalized;
+        this.normalizedPath = normalizedPath;
         this.route = route;
         this.params = params;
         this.query = query;
@@ -23,7 +23,7 @@ export default class Location {
     }
 
     getNormalizedPath(): string {
-        return this.normalized;
+        return this.normalizedPath;
     }
 
     getRoute(): Route | null {
