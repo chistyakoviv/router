@@ -9,12 +9,12 @@ import Route from './Route';
 import Location from './Location';
 import HTML5History from './history/HTML5History';
 
-export { Route };
+export { Route, HTML5History };
 
 /*!
  * @author Chistyakov Ilya <ichistyakovv@gmail.com>
  */
-export default class Router implements RouterInterface {
+export class Router implements RouterInterface {
     private history: HistoryApi;
     private resolver: ResolverInterface;
     private routes: RouteCollection;

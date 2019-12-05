@@ -60,6 +60,8 @@ export default class Route {
     }
 
     static build(): Route[] {
-        return Route.wrappedRoutes;
+        const routes = Route.wrappedRoutes;
+        Route.wrappedRoutes = [];
+        return routes;
     }
 };

@@ -1,4 +1,4 @@
-import Router, { Route } from '../dist/router';
+import { Router, Route } from '../dist/router';
 
 function app() {
 

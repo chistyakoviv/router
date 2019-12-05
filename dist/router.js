@@ -577,12 +577,13 @@ var Route = /** @class */ (function () {
         DecoratorHelper.wrap(params, fn);
     };
     Route.build = function () {
-        return Route.wrappedRoutes;
+        var routes = Route.wrappedRoutes;
+        Route.wrappedRoutes = [];
+        return routes;
     };
     Route.wrappedRoutes = [];
     return Route;
 }());
-//# sourceMappingURL=Route.js.map
 
 var Location = /** @class */ (function () {
     function Location(path, normalizedPath, route, params, query, hash) {
@@ -815,7 +816,9 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
+//# sourceMappingURL=Router.js.map
 
+exports.HTML5History = HTML5History;
 exports.Route = Route;
-exports.default = Router;
+exports.Router = Router;
 //# sourceMappingURL=router.js.map
