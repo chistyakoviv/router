@@ -584,6 +584,7 @@ var Route = /** @class */ (function () {
     Route.wrappedRoutes = [];
     return Route;
 }());
+//# sourceMappingURL=Route.js.map
 
 var Location = /** @class */ (function () {
     function Location(path, normalizedPath, route, params, query, hash) {
@@ -631,6 +632,31 @@ var Location = /** @class */ (function () {
     };
     Location.prototype.isSame = function (location) {
         return this.getPath() === location.getPath();
+    };
+    Location.prototype.getPrev = function () {
+        return this.prev ? this.prev : null;
+    };
+    Location.prototype.isPathChanged = function () {
+        if (!this.prev)
+            return false;
+        return this.normalizedPath !== this.prev.normalizedPath;
+    };
+    Location.prototype.isQueryChanged = function () {
+        if (!this.prev)
+            return false;
+        return this.query !== this.prev.query;
+    };
+    Location.prototype.isHashChanged = function () {
+        if (!this.prev)
+            return false;
+        return this.hash !== this.prev.hash;
+    };
+    Location.prototype.setPrev = function (location) {
+        location.clearPrev();
+        this.prev = location;
+    };
+    Location.prototype.clearPrev = function () {
+        this.prev = undefined;
     };
     Location.createDefault = function () {
         return new Location('/', '/');
@@ -761,6 +787,7 @@ var Router = /** @class */ (function () {
         return this.resolve(destination) || Location.createDefault();
     };
     Router.prototype.transitionTo = function (location) {
+        location.setPrev(this.location);
         this.location = location;
         this.location.apply();
     };
@@ -816,7 +843,6 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
-//# sourceMappingURL=Router.js.map
 
 exports.HTML5History = HTML5History;
 exports.Route = Route;

@@ -8,6 +8,7 @@ export default class Location {
     private query?: string;
     private hash?: string;
     private parsedQuery?: { [key: string]: string };
+    private prev?: Location;
 
     constructor(path: string, normalizedPath: string, route?: Route, params?: object, query?: string, hash?: string) {
         this.path = path;
@@ -66,6 +67,37 @@ export default class Location {
 
     isSame(location: Location): boolean {
         return this.getPath() === location.getPath();
+    }
+
+    getPrev(): Location | null {
+        return this.prev ? this.prev : null;
+    }
+
+    isPathChanged(): boolean {
+        if (!this.prev) return false;
+
+        return this.normalizedPath !== this.prev.normalizedPath;
+    }
+
+    isQueryChanged(): boolean {
+        if (!this.prev) return false;
+
+        return this.query !== this.prev.query;
+    }
+
+    isHashChanged(): boolean {
+        if (!this.prev) return false;
+
+        return this.hash !== this.prev.hash;
+    }
+
+    setPrev(location: Location): void {
+        location.clearPrev();
+        this.prev = location;
+    }
+
+    clearPrev(): void {
+        this.prev = undefined;
     }
 
     static createDefault(): Location {

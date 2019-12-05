@@ -43,6 +43,7 @@ export class Router implements RouterInterface {
     }
 
     private transitionTo(location: Location): void {
+        location.setPrev(this.location);
         this.location = location;
         this.location.apply();
     }
