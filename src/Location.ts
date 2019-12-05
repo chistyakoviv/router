@@ -64,6 +64,10 @@ export default class Location {
         return this.hash ? this.hash : null;
     }
 
+    isSame(location: Location): boolean {
+        return this.getPath() === location.getPath();
+    }
+
     static createDefault(): Location {
         return new Location('/', '/');
     }

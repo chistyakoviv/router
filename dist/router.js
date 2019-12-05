@@ -560,6 +560,9 @@ var Location = /** @class */ (function () {
     Location.prototype.getHash = function () {
         return this.hash ? this.hash : null;
     };
+    Location.prototype.isSame = function (location) {
+        return this.getPath() === location.getPath();
+    };
     Location.createDefault = function () {
         return new Location('/', '/');
     };
@@ -713,6 +716,9 @@ var Router = /** @class */ (function () {
         if (!location) {
             throw new Error("Can't push location: Invalid params.");
         }
+        if (this.location.isSame(location)) {
+            throw new Error("The destination location " + location.getPath() + " is the current location.");
+        }
         this.history.push(location.getPath());
         this.transitionTo(location);
     };
@@ -720,6 +726,9 @@ var Router = /** @class */ (function () {
         var location = this.resolve(destination);
         if (!location) {
             throw new Error("Can't replace location: Invalid params.");
+        }
+        if (this.location.isSame(location)) {
+            throw new Error("The destination location " + location.getPath() + " is the current location.");
         }
         this.history.replace(location.getPath());
         this.transitionTo(location);

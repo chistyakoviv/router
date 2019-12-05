@@ -73,6 +73,10 @@ export default class Router implements RouterInterface {
             throw new Error(`Can't push location: Invalid params.`);
         }
 
+        if (this.location.isSame(location)) {
+            throw new Error(`The destination location ${location.getPath()} is the current location.`);
+        }
+
         this.history.push(location.getPath());
         this.transitionTo(location);
     }
@@ -82,6 +86,10 @@ export default class Router implements RouterInterface {
 
         if (!location) {
             throw new Error(`Can't replace location: Invalid params.`);
+        }
+
+        if (this.location.isSame(location)) {
+            throw new Error(`The destination location ${location.getPath()} is the current location.`);
         }
 
         this.history.replace(location.getPath());
