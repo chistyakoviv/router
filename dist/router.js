@@ -565,6 +565,7 @@ var Location = /** @class */ (function () {
     };
     return Location;
 }());
+//# sourceMappingURL=Location.js.map
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -704,6 +705,9 @@ var Router = /** @class */ (function () {
         var _b = this.routes.match(path), matchedPath = _b.matchedPath, route = _b.route, params = _b.params;
         return new Location(destination.path, path, route, params, query, hash);
     };
+    Router.prototype.match = function (destination) {
+        return !!this.resolve(destination);
+    };
     Router.prototype.push = function (destination) {
         var location = this.resolve(destination);
         if (!location) {
@@ -734,7 +738,6 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
-//# sourceMappingURL=Router.js.map
 
 module.exports = Router;
 //# sourceMappingURL=router.js.map

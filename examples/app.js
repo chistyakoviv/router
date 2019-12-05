@@ -16,13 +16,8 @@ function app() {
             }
         }
     ]);
-    router.push({ path: '/hello/1?param[]=1&param[]=2' }).then(location => {
-        console.log(location);
-
-        router.push({ name: 'hello', params: { id: 2 } }).then(location => {
-            console.log(location);
-        });
-    });
+    router.push({ path: '/hello/1?param[]=1&param[]=2' });
+    router.push({ name: 'hello', params: { id: 2 } });
 }
 
 export default app();

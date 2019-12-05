@@ -8,4 +8,5 @@ export default interface RouterInterface {
     back(): void;
     forward(): void;
     getLocation(): Location;
+    match(destination: RawLocation): boolean;
 };

@@ -62,6 +62,10 @@ export default class Router implements RouterInterface {
         return new Location(destination.path, path, route, params, query, hash);
     }
 
+    match(destination: RawLocation): boolean {
+        return !!this.resolve(destination);
+    }
+
     push(destination: RawLocation): void {
         const location = this.resolve(destination);
 
