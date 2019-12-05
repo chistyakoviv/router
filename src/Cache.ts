@@ -1,6 +1,4 @@
-import CacheInterface from './interfaces/CacheInterface';
-
-export default class Cache<T> implements CacheInterface<T> {
+export default class Cache<T> {
     private items: {
         [key: string]: T
     } = {};

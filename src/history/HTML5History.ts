@@ -14,15 +14,38 @@ export default class HTML5History extends BaseHistory implements HistoryApi {
         window.addEventListener('popstate', this.onLocationChange);
     }
 
-    go(n: number) {
+    private pushState(path: string, replace?: boolean): void {
+        // try...catch the pushState call to get around Safari
+        // DOM Exception 18 where it limits to 100 pushState calls
+        // @see https://github.com/vuejs/vue-router/blob/dev/src/util/push-state.js
+        try {
+            if (replace) {
+                window.history.replaceState({}, '', path);
+            } else {
+                window.history.pushState({}, '', path);
+            }
+        } catch (e) {
+            window.location[replace ? 'replace' : 'assign'](path);
+        }
+    }
+
+    back(): void {
+        window.history.back();
+    }
+
+    forward(): void {
+        window.history.forward();
+    }
+
+    go(n: number): void {
         window.history.go(n);
     }
 
     push(path: string): void {
-        window.history.pushState({}, '', path);
+        this.pushState(path);
     }
 
     replace(path: string): void {
-
+        this.pushState(path, true);
     }
 };

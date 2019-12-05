@@ -9,6 +9,8 @@ export default class BaseHistory implements HistoryApi {
     go(n: number) {}
     push(path: string): void {}
     replace(path: string): void {}
+    back(): void {}
+    forward(): void {}
 
     on(name: HistoryEvents, callback: Function): void {
         this.events[name].push(callback);

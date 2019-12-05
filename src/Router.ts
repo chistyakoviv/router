@@ -11,6 +11,10 @@ import Location from './Location';
 import HTML5History from './history/HTML5History';
 import UrlHelper from './helpers/UrlHelper';
 
+/*!
+ * @author Chistyakov Ilya <ichistyakovv@gmail.com>
+ */
+
 export default class Router implements RouterInterface {
     private history: HistoryApi;
     private resolver: ResolverInterface;
@@ -61,22 +65,38 @@ export default class Router implements RouterInterface {
         return new Location(destination.path, path, route, params, query, hash);
     }
 
-    async push(destination: RawLocation): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const location = this.resolve(destination);
+    push(destination: RawLocation): void {
+        const location = this.resolve(destination);
 
-            if (!location) {
-                return reject(new Error(`Can't push location: incorrect params.`));
-            }
+        if (!location) {
+            throw new Error(`Can't push location: Invalid params.`);
+        }
 
-            try {
-                this.history.push(location.getPath());
-                this.transitionTo(location);
-                resolve(location);
-            } catch (err) {
-                reject(err);
-            }
-        });
+        this.history.push(location.getPath());
+        this.transitionTo(location);
+    }
+
+    replace(destination: RawLocation): void {
+        const location = this.resolve(destination);
+
+        if (!location) {
+            throw new Error(`Can't replace location: Invalid params.`);
+        }
+
+        this.history.replace(location.getPath());
+        this.transitionTo(location);
+    }
+
+    go(n: number): void {
+        this.history.go(n);
+    }
+
+    back(): void {
+        this.history.back();
+    }
+
+    forward(): void {
+        this.history.forward();
     }
 
     getLocation(): Location {
