@@ -1,14 +1,11 @@
 import Route from './Route';
-import RouteConfig from './interfaces/RouteConfig';
 import RouteMatch from './interfaces/RouteMatch';
 
 export default class RouteCollection {
     private routes: Route[] = [];
 
-    constructor(routes: RouteConfig[]) {
-        for (let i = 0; i < routes.length; i++) {
-            this.routes.push(new Route(routes[i].path, routes[i].handler, routes[i].name));
-        }
+    constructor(routes: Route[]) {
+        this.routes = routes;
     }
 
     match(path: string): RouteMatch {

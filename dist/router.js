@@ -1,5 +1,7 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
 var HistoryEvents;
 (function (HistoryEvents) {
     HistoryEvents["POPSTATE"] = "popstate";
@@ -464,38 +466,10 @@ var Resolver = /** @class */ (function () {
 }());
 //# sourceMappingURL=Resolver.js.map
 
-var Route = /** @class */ (function () {
-    function Route(path, handler, name) {
-        this.path = path;
-        this.name = name;
-        this.handler = handler;
-        this.matcher = match(this.path, { decode: decodeURIComponent });
-    }
-    Route.prototype.match = function (path) {
-        var matched = this.matcher(path);
-        if (!matched)
-            return null;
-        return { matchedPath: matched.path, route: this, params: matched.params };
-    };
-    Route.prototype.getPath = function () {
-        return this.path;
-    };
-    Route.prototype.getName = function () {
-        return this.name ? this.name : null;
-    };
-    Route.prototype.getHandler = function () {
-        return this.handler ? this.handler : null;
-    };
-    return Route;
-}());
-//# sourceMappingURL=Route.js.map
-
 var RouteCollection = /** @class */ (function () {
     function RouteCollection(routes) {
         this.routes = [];
-        for (var i = 0; i < routes.length; i++) {
-            this.routes.push(new Route(routes[i].path, routes[i].handler, routes[i].name));
-        }
+        this.routes = routes;
     }
     RouteCollection.prototype.match = function (path) {
         for (var i = 0; i < this.routes.length; i++) {
@@ -515,6 +489,100 @@ var RouteCollection = /** @class */ (function () {
     return RouteCollection;
 }());
 //# sourceMappingURL=RouteCollection.js.map
+
+var PathHelper = /** @class */ (function () {
+    function PathHelper() {
+    }
+    PathHelper.removeTrailingSlash = function (path) {
+        return path && path.replace(/\/?$/, '') || '';
+    };
+    PathHelper.cleanPath = function (path) {
+        return path && path.replace(/\/\//, '/') || '';
+    };
+    PathHelper.join = function (lstr, rstr) {
+        return PathHelper.cleanPath(PathHelper.removeTrailingSlash(lstr) + "/" + rstr);
+    };
+    return PathHelper;
+}());
+//# sourceMappingURL=PathHelper.js.map
+
+var DecoratorHelper = /** @class */ (function () {
+    function DecoratorHelper() {
+    }
+    DecoratorHelper.wrap = function (params, fn) {
+        var wrappers = DecoratorHelper.wrappers;
+        wrappers.push(params);
+        fn();
+        wrappers.pop();
+    };
+    DecoratorHelper.getParams = function () {
+        var wrappers = DecoratorHelper.wrappers;
+        var params = {};
+        for (var i = 0; i < wrappers.length; i++) {
+            for (var nextParam in wrappers[i]) {
+                if (wrappers[i][nextParam]) {
+                    switch (nextParam) {
+                        case 'path':
+                            params[nextParam] = PathHelper.join(params[nextParam], wrappers[i][nextParam]);
+                            break;
+                        default:
+                            params[nextParam] = params[nextParam] ? params[nextParam] : '' + wrappers[i][nextParam];
+                    }
+                }
+            }
+        }
+        return params;
+    };
+    DecoratorHelper.wrappers = [];
+    return DecoratorHelper;
+}());
+//# sourceMappingURL=DecoratorHelper.js.map
+
+var Route = /** @class */ (function () {
+    function Route(path, handler, name) {
+        this.path = path;
+        this.name = name;
+        this.handler = handler;
+        this.matcher = match(this.path, { decode: decodeURIComponent });
+    }
+    Route.prototype.match = function (path) {
+        var matched = this.matcher(path);
+        if (!matched)
+            return null;
+        return { matchedPath: matched.path, route: this, params: matched.params };
+    };
+    Route.prototype.getPath = function () {
+        return this.path;
+    };
+    Route.prototype.getName = function () {
+        return this.name ? this.name : null;
+    };
+    Route.prototype.setName = function (name) {
+        this.name = name;
+    };
+    Route.prototype.getHandler = function () {
+        return this.handler ? this.handler : null;
+    };
+    Route.create = function (path, handler, name) {
+        var params = DecoratorHelper.getParams();
+        if (params.as) {
+            name = params.as + name;
+        }
+        if (params.path) {
+            path = PathHelper.join(params.path, path);
+        }
+        Route.wrappedRoutes.push(new Route(path, handler, name));
+    };
+    Route.group = function (params, fn) {
+        DecoratorHelper.wrap(params, fn);
+    };
+    Route.build = function () {
+        return Route.wrappedRoutes;
+    };
+    Route.wrappedRoutes = [];
+    return Route;
+}());
+//# sourceMappingURL=Route.js.map
 
 var Location = /** @class */ (function () {
     function Location(path, normalizedPath, route, params, query, hash) {
@@ -748,5 +816,6 @@ var Router = /** @class */ (function () {
     return Router;
 }());
 
-module.exports = Router;
+exports.Route = Route;
+exports.default = Router;
 //# sourceMappingURL=router.js.map
