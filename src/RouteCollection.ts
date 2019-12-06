@@ -5,7 +5,7 @@ export default class RouteCollection {
     private routes: Route[] = [];
 
     constructor(routes: Route[]) {
-        this.routes = routes;
+        this.routes = routes;console.log(routes);
     }
 
     match(path: string): RouteMatch {

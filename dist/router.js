@@ -470,6 +470,7 @@ var RouteCollection = /** @class */ (function () {
     function RouteCollection(routes) {
         this.routes = [];
         this.routes = routes;
+        console.log(routes);
     }
     RouteCollection.prototype.match = function (path) {
         for (var i = 0; i < this.routes.length; i++) {
@@ -517,7 +518,7 @@ var DecoratorHelper = /** @class */ (function () {
     };
     DecoratorHelper.getParams = function () {
         var wrappers = DecoratorHelper.wrappers;
-        var params = {};
+        var params = { 'middlewares': [] };
         for (var i = 0; i < wrappers.length; i++) {
             for (var nextParam in wrappers[i]) {
                 if (wrappers[i][nextParam]) {
@@ -525,18 +526,31 @@ var DecoratorHelper = /** @class */ (function () {
                         case 'path':
                             params[nextParam] = PathHelper.join(params[nextParam], wrappers[i][nextParam]);
                             break;
+                        case 'middleware':
+                            params['middlewares'].push(wrappers[i][nextParam]);
+                            break;
                         default:
-                            params[nextParam] = params[nextParam] ? params[nextParam] : '' + wrappers[i][nextParam];
+                            params[nextParam] = (params[nextParam] ? params[nextParam] : '') + wrappers[i][nextParam];
                     }
                 }
             }
         }
         return params;
     };
+    DecoratorHelper.applyMiddleware = function (hander, middlewares) {
+        if (hander === void 0) { hander = function () { }; }
+        middlewares = middlewares.slice();
+        middlewares.reverse();
+        return middlewares.reduce(function (prev, current) { return DecoratorHelper.compose(current, prev); }, hander);
+    };
+    DecoratorHelper.compose = function (f, g) {
+        return function (a) {
+            return f(a, g);
+        };
+    };
     DecoratorHelper.wrappers = [];
     return DecoratorHelper;
 }());
-//# sourceMappingURL=DecoratorHelper.js.map
 
 var Route = /** @class */ (function () {
     function Route(path, handler, name) {
@@ -571,6 +585,9 @@ var Route = /** @class */ (function () {
         if (params.path) {
             path = PathHelper.join(params.path, path);
         }
+        if (params.middlewares.length > 0) {
+            handler = DecoratorHelper.applyMiddleware(handler, params.middlewares);
+        }
         Route.wrappedRoutes.push(new Route(path, handler, name));
     };
     Route.group = function (params, fn) {
@@ -604,9 +621,9 @@ var Location = /** @class */ (function () {
     Location.prototype.getRoute = function () {
         return this.route ? this.route : null;
     };
-    Location.prototype.apply = function () {
+    Location.prototype.apply = function (router) {
         var handler = this.route && this.route.getHandler();
-        handler && handler(this);
+        handler && handler(router);
     };
     Location.prototype.getParams = function () {
         return this.params ? this.params : null;
@@ -652,11 +669,8 @@ var Location = /** @class */ (function () {
         return this.hash !== this.prev.hash;
     };
     Location.prototype.setPrev = function (location) {
-        location.clearPrev();
+        location.prev = undefined;
         this.prev = location;
-    };
-    Location.prototype.clearPrev = function () {
-        this.prev = undefined;
     };
     Location.createDefault = function () {
         return new Location('/', '/');
@@ -779,7 +793,7 @@ var Router = /** @class */ (function () {
         this.routes = new RouteCollection(routes);
         this.location = this.ensureLocation();
         this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
-        this.location.apply();
+        this.location.apply(this);
     }
     Router.prototype.ensureLocation = function (destination) {
         if (!destination)
@@ -789,7 +803,7 @@ var Router = /** @class */ (function () {
     Router.prototype.transitionTo = function (location) {
         location.setPrev(this.location);
         this.location = location;
-        this.location.apply();
+        this.location.apply(this);
     };
     Router.prototype.resolve = function (destination) {
         if (destination.name) {
@@ -843,6 +857,7 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
+//# sourceMappingURL=Router.js.map
 
 exports.HTML5History = HTML5History;
 exports.Route = Route;

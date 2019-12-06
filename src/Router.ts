@@ -27,7 +27,7 @@ export class Router implements RouterInterface {
         this.location = this.ensureLocation();
 
         this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
-        this.location.apply();
+        this.location.apply(this);
     }
 
     private onLocationChange: (destination: RawLocation) => void = (destination: RawLocation) => {
@@ -45,7 +45,7 @@ export class Router implements RouterInterface {
     private transitionTo(location: Location): void {
         location.setPrev(this.location);
         this.location = location;
-        this.location.apply();
+        this.location.apply(this);
     }
 
     private resolve(destination: RawLocation): Location | null {

@@ -52,6 +52,10 @@ export default class Route {
             path = PathHelper.join(params.path, path);
         }
 
+        if (params.middlewares.length > 0) {
+            handler = DecoratorHelper.applyMiddleware(handler, params.middlewares);
+        }
+
         Route.wrappedRoutes.push(new Route(path, handler, name));
     }
 

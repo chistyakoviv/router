@@ -1,4 +1,5 @@
 import Route from './Route';
+import { Router } from './Router';
 
 export default class Location {
     private path: string;
@@ -31,9 +32,9 @@ export default class Location {
         return this.route ? this.route : null;
     }
 
-    apply(): void {
+    apply(router: Router): void {
         const handler = this.route && this.route.getHandler();
-        handler && handler(this);
+        handler && handler(router);
     }
 
     getParams(): object | null {
