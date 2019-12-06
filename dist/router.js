@@ -470,7 +470,6 @@ var RouteCollection = /** @class */ (function () {
     function RouteCollection(routes) {
         this.routes = [];
         this.routes = routes;
-        console.log(routes);
     }
     RouteCollection.prototype.match = function (path) {
         for (var i = 0; i < this.routes.length; i++) {
@@ -489,7 +488,6 @@ var RouteCollection = /** @class */ (function () {
     };
     return RouteCollection;
 }());
-//# sourceMappingURL=RouteCollection.js.map
 
 var PathHelper = /** @class */ (function () {
     function PathHelper() {
@@ -551,6 +549,7 @@ var DecoratorHelper = /** @class */ (function () {
     DecoratorHelper.wrappers = [];
     return DecoratorHelper;
 }());
+//# sourceMappingURL=DecoratorHelper.js.map
 
 var Route = /** @class */ (function () {
     function Route(path, handler, name) {
