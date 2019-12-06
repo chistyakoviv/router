@@ -92,12 +92,8 @@ export default class Location {
     }
 
     setPrev(location: Location): void {
-        location.clearPrev();
+        location.prev = undefined;
         this.prev = location;
-    }
-
-    clearPrev(): void {
-        this.prev = undefined;
     }
 
     static createDefault(): Location {
