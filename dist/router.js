@@ -537,11 +537,11 @@ var DecoratorHelper = /** @class */ (function () {
         }
         return params;
     };
-    DecoratorHelper.applyMiddleware = function (hander, middlewares) {
-        if (hander === void 0) { hander = function () { }; }
+    DecoratorHelper.applyMiddleware = function (handler, middlewares) {
+        if (handler === void 0) { handler = function () { }; }
         middlewares = middlewares.slice();
         middlewares.reverse();
-        return middlewares.reduce(function (prev, current) { return DecoratorHelper.compose(current, prev); }, hander);
+        return middlewares.reduce(function (prev, current) { return DecoratorHelper.compose(current, prev); }, handler);
     };
     DecoratorHelper.compose = function (f, g) {
         return function (a) {

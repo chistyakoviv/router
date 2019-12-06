@@ -39,11 +39,11 @@ export default class DecoratorHelper {
         return params;
     }
 
-    static applyMiddleware(hander: Function = () => {}, middlewares: Function[]): Function {
+    static applyMiddleware(handler: Function = () => {}, middlewares: Function[]): Function {
         middlewares = middlewares.slice();
         middlewares.reverse();
 
-        return middlewares.reduce((prev, current) => DecoratorHelper.compose(current, prev), hander);
+        return middlewares.reduce((prev, current) => DecoratorHelper.compose(current, prev), handler);
     }
 
     static compose(f: Function, g: Function): Function {
