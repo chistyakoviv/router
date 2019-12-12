@@ -15,9 +15,7 @@ export default class HTML5History extends BaseHistory implements HistoryApi {
     }
 
     private pushState(path: string, replace?: boolean): void {
-        // try...catch the pushState call to get around Safari
-        // DOM Exception 18 where it limits to 100 pushState calls
-        // @see https://github.com/vuejs/vue-router/blob/dev/src/util/push-state.js
+        // Protection from Safari pushState limit bug
         try {
             if (replace) {
                 window.history.replaceState({}, '', path);
