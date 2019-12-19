@@ -6,7 +6,6 @@ var HistoryEvents;
 (function (HistoryEvents) {
     HistoryEvents["POPSTATE"] = "popstate";
 })(HistoryEvents || (HistoryEvents = {}));
-//# sourceMappingURL=HistoryApi.js.map
 
 var UrlHelper = /** @class */ (function () {
     function UrlHelper() {
@@ -32,7 +31,6 @@ var UrlHelper = /** @class */ (function () {
     };
     return UrlHelper;
 }());
-//# sourceMappingURL=UrlHelper.js.map
 
 /**
  * Tokenize input string.
@@ -430,7 +428,6 @@ function pathToRegexp(path, keys, options) {
         return arrayToRegexp(path, keys, options);
     return stringToRegexp(path, keys, options);
 }
-//# sourceMappingURL=index.js.map
 
 var Cache = /** @class */ (function () {
     function Cache() {
@@ -447,7 +444,6 @@ var Cache = /** @class */ (function () {
     };
     return Cache;
 }());
-//# sourceMappingURL=Cache.js.map
 
 var Resolver = /** @class */ (function () {
     function Resolver() {
@@ -464,7 +460,6 @@ var Resolver = /** @class */ (function () {
     };
     return Resolver;
 }());
-//# sourceMappingURL=Resolver.js.map
 
 var RouteCollection = /** @class */ (function () {
     function RouteCollection(routes) {
@@ -503,7 +498,6 @@ var PathHelper = /** @class */ (function () {
     };
     return PathHelper;
 }());
-//# sourceMappingURL=PathHelper.js.map
 
 var DecoratorHelper = /** @class */ (function () {
     function DecoratorHelper() {
@@ -549,7 +543,6 @@ var DecoratorHelper = /** @class */ (function () {
     DecoratorHelper.wrappers = [];
     return DecoratorHelper;
 }());
-//# sourceMappingURL=DecoratorHelper.js.map
 
 var Route = /** @class */ (function () {
     function Route(path, handler, name) {
@@ -600,7 +593,6 @@ var Route = /** @class */ (function () {
     Route.wrappedRoutes = [];
     return Route;
 }());
-//# sourceMappingURL=Route.js.map
 
 var Location = /** @class */ (function () {
     function Location(path, normalizedPath, route, params, query, hash) {
@@ -676,7 +668,6 @@ var Location = /** @class */ (function () {
     };
     return Location;
 }());
-//# sourceMappingURL=Location.js.map
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -728,7 +719,6 @@ var BaseHistory = /** @class */ (function () {
     };
     return BaseHistory;
 }());
-//# sourceMappingURL=BaseHistory.js.map
 
 var HTML5History = /** @class */ (function (_super) {
     __extends(HTML5History, _super);
@@ -741,9 +731,7 @@ var HTML5History = /** @class */ (function (_super) {
         return _this;
     }
     HTML5History.prototype.pushState = function (path, replace) {
-        // try...catch the pushState call to get around Safari
-        // DOM Exception 18 where it limits to 100 pushState calls
-        // @see https://github.com/vuejs/vue-router/blob/dev/src/util/push-state.js
+        // Protection from Safari pushState limit bug
         try {
             if (replace) {
                 window.history.replaceState({}, '', path);
@@ -773,7 +761,6 @@ var HTML5History = /** @class */ (function (_super) {
     };
     return HTML5History;
 }(BaseHistory));
-//# sourceMappingURL=HTML5History.js.map
 
 /*!
  * @author Chistyakov Ilya <ichistyakovv@gmail.com>
@@ -790,10 +777,13 @@ var Router = /** @class */ (function () {
         this.history = history;
         this.resolver = resolver;
         this.routes = new RouteCollection(routes);
-        this.location = this.ensureLocation();
-        this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
-        this.location.apply(this);
+        this.location = Location.createDefault();
     }
+    Router.prototype.init = function () {
+        this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
+        this.location = this.ensureLocation();
+        this.location.apply(this);
+    };
     Router.prototype.ensureLocation = function (destination) {
         if (!destination)
             return this.resolve({ path: UrlHelper.getPath() }) || Location.createDefault();
@@ -856,7 +846,6 @@ var Router = /** @class */ (function () {
     };
     return Router;
 }());
-//# sourceMappingURL=Router.js.map
 
 exports.HTML5History = HTML5History;
 exports.Route = Route;

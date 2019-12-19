@@ -24,9 +24,12 @@ export class Router implements RouterInterface {
         this.history = history;
         this.resolver = resolver;
         this.routes = new RouteCollection(routes);
-        this.location = this.ensureLocation();
+        this.location = Location.createDefault();
+    }
 
+    init() {
         this.history.on(HistoryEvents.POPSTATE, this.onLocationChange);
+        this.location = this.ensureLocation();
         this.location.apply(this);
     }
 
