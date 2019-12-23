@@ -69,7 +69,8 @@ export class Router implements RouterInterface {
     }
 
     match(destination: RawLocation): boolean {
-        return !!this.resolve(destination);
+        const location = this.resolve(destination);
+        return !!(location && location.getRoute());
     }
 
     push(destination: RawLocation): void {

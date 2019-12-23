@@ -808,7 +808,8 @@ var Router = /** @class */ (function () {
         return new Location(destination.path, path, route, params, query, hash);
     };
     Router.prototype.match = function (destination) {
-        return !!this.resolve(destination);
+        var location = this.resolve(destination);
+        return !!(location && location.getRoute());
     };
     Router.prototype.push = function (destination) {
         var location = this.resolve(destination);
