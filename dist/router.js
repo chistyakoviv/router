@@ -646,17 +646,17 @@ var Location = /** @class */ (function () {
     };
     Location.prototype.isPathChanged = function () {
         if (!this.prev)
-            return false;
+            return true;
         return this.normalizedPath !== this.prev.normalizedPath;
     };
     Location.prototype.isQueryChanged = function () {
         if (!this.prev)
-            return false;
+            return true;
         return this.query !== this.prev.query;
     };
     Location.prototype.isHashChanged = function () {
         if (!this.prev)
-            return false;
+            return true;
         return this.hash !== this.prev.hash;
     };
     Location.prototype.setPrev = function (location) {

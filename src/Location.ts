@@ -75,19 +75,19 @@ export default class Location {
     }
 
     isPathChanged(): boolean {
-        if (!this.prev) return false;
+        if (!this.prev) return true;
 
         return this.normalizedPath !== this.prev.normalizedPath;
     }
 
     isQueryChanged(): boolean {
-        if (!this.prev) return false;
+        if (!this.prev) return true;
 
         return this.query !== this.prev.query;
     }
 
     isHashChanged(): boolean {
-        if (!this.prev) return false;
+        if (!this.prev) return true;
 
         return this.hash !== this.prev.hash;
     }
