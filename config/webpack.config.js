@@ -2,12 +2,13 @@ const path = require('path');
 
 module.exports = {
     entry: './examples/app.js',
+    mode: 'development',
     devServer: {
-        contentBase: path.resolve(__dirname, '../examples'),
-        overlay: {
-            warnings: true,
-            errors: true
-        }
+        static: {
+          directory: path.join(__dirname, '../examples'),
+        },
+        compress: true,
+        port: 9000,
     },
     module: {
         rules: [
@@ -24,6 +25,6 @@ module.exports = {
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'js'),
-        publicPath: 'js'
+        publicPath: '/js/'
     }
 };
