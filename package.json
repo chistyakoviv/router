@@ -12,12 +12,34 @@
         "build:es2015": "tsc -p ./typescript/tsconfig.esm2015.json",
         "build:types": "tsc -p ./typescript/tsconfig.types.json",
         "lint": "eslint \"{src,test}/**/*.ts\" --fix",
-        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\""
+        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:cov": "jest --coverage",
+        "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
     },
     "author": "Chistyakov Ilya",
     "license": "MIT",
     "dependencies": {
         "path-to-regexp": "^6.1.0"
+    },
+    "jest": {
+        "moduleFileExtensions": [
+            "js",
+            "json",
+            "ts"
+        ],
+        "rootDir": "test",
+        "testRegex": ".*\\.spec\\.ts$",
+        "transform": {
+            "^.+\\.(t|j)s$": "ts-jest"
+        },
+        "collectCoverageFrom": [
+            "**/*.(t|j)s"
+        ],
+        "coverageDirectory": "../coverage",
+        "testEnvironment": "jsdom",
+        "clearMocks": true
     },
     "devDependencies": {
         "@types/node": "^17.0.17",
@@ -26,8 +48,10 @@
         "eslint": "^8.9.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0",
+        "jest": "^27.5.1",
         "prettier": "^2.5.1",
         "rimraf": "^3.0.2",
+        "ts-jest": "^27.1.3",
         "ts-loader": "^9.2.6",
         "tslib": "^2.3.1",
         "typescript": "^4.5.5",
