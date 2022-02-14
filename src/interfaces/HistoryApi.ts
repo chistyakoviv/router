@@ -1,6 +1,8 @@
 import EventEmitter from './EventEmitter';
 
-export enum HistoryEvents { POPSTATE = 'popstate' };
+export enum HistoryEvents {
+    POPSTATE = 'popstate',
+}
 
 export default interface HistoryApi extends EventEmitter {
     go(n: number): void;
@@ -8,4 +10,4 @@ export default interface HistoryApi extends EventEmitter {
     replace(path: string): void;
     back(): void;
     forward(): void;
-};
+}

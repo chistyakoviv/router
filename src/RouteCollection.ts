@@ -20,10 +20,9 @@ export default class RouteCollection {
 
     find(name: string): Route | null {
         for (let i = 0; i < this.routes.length; i++) {
-            if (this.routes[i].getName() === name)
-                return this.routes[i];
+            if (this.routes[i].getName() === name) return this.routes[i];
         }
 
         return null;
     }
-};
+}

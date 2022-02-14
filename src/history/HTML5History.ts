@@ -3,10 +3,11 @@ import UrlHelper from '../helpers/UrlHelper';
 import BaseHistory from './BaseHistory';
 
 export default class HTML5History extends BaseHistory implements HistoryApi {
-
     private onLocationChange: (e: Event) => void = (e: Event) => {
-        this.events[HistoryEvents.POPSTATE].forEach(cb => cb({ path: UrlHelper.getPath() }));
-    }
+        this.events[HistoryEvents.POPSTATE].forEach((cb) =>
+            cb({ path: UrlHelper.getPath() }),
+        );
+    };
 
     constructor() {
         super();
@@ -46,4 +47,4 @@ export default class HTML5History extends BaseHistory implements HistoryApi {
     replace(path: string): void {
         this.pushState(path, true);
     }
-};
+}

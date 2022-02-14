@@ -11,7 +11,14 @@ export default class Location {
     private parsedQuery?: { [key: string]: string };
     private prev?: Location;
 
-    constructor(path: string, normalizedPath: string, route?: Route, params?: object, query?: string, hash?: string) {
+    constructor(
+        path: string,
+        normalizedPath: string,
+        route?: Route,
+        params?: object,
+        query?: string,
+        hash?: string,
+    ) {
         this.path = path;
         this.normalizedPath = normalizedPath;
         this.route = route;
@@ -47,19 +54,18 @@ export default class Location {
     }
 
     getQuery(): object {
-        if (this.parsedQuery)
-            return this.parsedQuery;
+        if (this.parsedQuery) return this.parsedQuery;
 
         const query: { [key: string]: string } = {};
 
         if (this.query) {
-            this.query.split('&').forEach(param => {
+            this.query.split('&').forEach((param) => {
                 const parts = param.split('=');
                 query[parts[0]] = parts[1];
             });
         }
 
-        return this.parsedQuery = query;
+        return (this.parsedQuery = query);
     }
 
     getHash(): string | null {
@@ -100,4 +106,4 @@ export default class Location {
     static createDefault(): Location {
         return new Location('/', '/');
     }
-};
+}

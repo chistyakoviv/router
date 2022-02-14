@@ -1,11 +1,10 @@
 export default class Cache<T> {
     private items: {
-        [key: string]: T
+        [key: string]: T;
     } = {};
 
     public get(key: string, value: Function): T {
-        if (this.items[key])
-            return this.items[key];
+        if (this.items[key]) return this.items[key];
 
         this.set(key, value());
 
@@ -15,4 +14,4 @@ export default class Cache<T> {
     public set(key: string, value: T): void {
         this.items[key] = value;
     }
-};
+}

@@ -22,7 +22,11 @@ export default class Route {
 
         if (!matched) return null;
 
-        return { matchedPath: matched.path, route: this, params: matched.params };
+        return {
+            matchedPath: matched.path,
+            route: this,
+            params: matched.params,
+        };
     }
 
     getPath(): string {
@@ -53,7 +57,10 @@ export default class Route {
         }
 
         if (params.middlewares.length > 0) {
-            handler = DecoratorHelper.applyMiddleware(handler, params.middlewares);
+            handler = DecoratorHelper.applyMiddleware(
+                handler,
+                params.middlewares,
+            );
         }
 
         Route.wrappedRoutes.push(new Route(path, handler, name));
@@ -68,4 +75,4 @@ export default class Route {
         Route.wrappedRoutes = [];
         return routes;
     }
-};
+}

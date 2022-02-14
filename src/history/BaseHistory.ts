@@ -1,9 +1,9 @@
-import HistoryApi, { HistoryEvents } from "../interfaces/HistoryApi";
+import HistoryApi, { HistoryEvents } from '../interfaces/HistoryApi';
 
 export default class BaseHistory implements HistoryApi {
     protected location?: Location;
     protected events: {
-        [key: string]: Function[]
+        [key: string]: Function[];
     } = { [HistoryEvents.POPSTATE]: [] };
 
     go(n: number) {}
@@ -23,4 +23,4 @@ export default class BaseHistory implements HistoryApi {
             this.events[name].splice(index, 1);
         }
     }
-};
+}

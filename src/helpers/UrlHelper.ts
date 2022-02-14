@@ -4,7 +4,11 @@ export default class UrlHelper {
         return (path || '/') + window.location.search + window.location.hash;
     }
 
-    static parsePath (path: string): { path: string; query: string; hash: string; } {
+    static parsePath(path: string): {
+        path: string;
+        query: string;
+        hash: string;
+    } {
         let hash = '';
         let query = '';
 
@@ -24,4 +28,4 @@ export default class UrlHelper {
 
         return { path, query, hash };
     }
-};
+}

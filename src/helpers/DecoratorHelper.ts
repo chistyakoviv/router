@@ -2,7 +2,7 @@ import PathHelper from './PathHelper';
 
 export interface Params {
     [key: string]: any;
-};
+}
 
 export default class DecoratorHelper {
     static wrappers: Params[] = [];
@@ -17,20 +17,25 @@ export default class DecoratorHelper {
 
     static getParams(): Params {
         const wrappers = DecoratorHelper.wrappers;
-        const params: Params = { 'middlewares': [] };
+        const params: Params = { middlewares: [] };
 
         for (let i = 0; i < wrappers.length; i++) {
             for (let nextParam in wrappers[i]) {
                 if (wrappers[i][nextParam]) {
                     switch (nextParam) {
                         case 'path':
-                            params[nextParam] = PathHelper.join(params[nextParam], wrappers[i][nextParam]);
+                            params[nextParam] = PathHelper.join(
+                                params[nextParam],
+                                wrappers[i][nextParam],
+                            );
                             break;
                         case 'middleware':
                             params['middlewares'].push(wrappers[i][nextParam]);
                             break;
                         default:
-                            params[nextParam] = (params[nextParam] ? params[nextParam] : '') + wrappers[i][nextParam];
+                            params[nextParam] =
+                                (params[nextParam] ? params[nextParam] : '') +
+                                wrappers[i][nextParam];
                     }
                 }
             }
@@ -39,16 +44,22 @@ export default class DecoratorHelper {
         return params;
     }
 
-    static applyMiddleware(handler: Function = () => {}, middlewares: Function[]): Function {
+    static applyMiddleware(
+        handler: Function = () => {},
+        middlewares: Function[],
+    ): Function {
         middlewares = middlewares.slice();
         middlewares.reverse();
 
-        return middlewares.reduce((prev, current) => DecoratorHelper.compose(current, prev), handler);
+        return middlewares.reduce(
+            (prev, current) => DecoratorHelper.compose(current, prev),
+            handler,
+        );
     }
 
     static compose(f: Function, g: Function): Function {
-        return function(a: any) {
+        return function (a: any) {
             return f(a, g);
-        }
+        };
     }
-};
+}

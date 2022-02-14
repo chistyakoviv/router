@@ -20,7 +20,11 @@ export class Router implements RouterInterface {
     private routes: RouteCollection;
     private location: Location;
 
-    constructor(routes: Route[], history: HistoryApi = new HTML5History(), resolver: ResolverInterface = new Resolver()) {
+    constructor(
+        routes: Route[],
+        history: HistoryApi = new HTML5History(),
+        resolver: ResolverInterface = new Resolver(),
+    ) {
         this.history = history;
         this.resolver = resolver;
         this.routes = new RouteCollection(routes);
@@ -33,14 +37,19 @@ export class Router implements RouterInterface {
         this.location.apply(this);
     }
 
-    private onLocationChange: (destination: RawLocation) => void = (destination: RawLocation) => {
+    private onLocationChange: (destination: RawLocation) => void = (
+        destination: RawLocation,
+    ) => {
         const location = this.ensureLocation(destination);
         this.transitionTo(location);
-    }
+    };
 
     private ensureLocation(destination?: RawLocation): Location {
         if (!destination)
-            return this.resolve({ path: UrlHelper.getPath() }) || Location.createDefault();
+            return (
+                this.resolve({ path: UrlHelper.getPath() }) ||
+                Location.createDefault()
+            );
 
         return this.resolve(destination) || Location.createDefault();
     }
@@ -57,7 +66,10 @@ export class Router implements RouterInterface {
 
             if (!route) return null;
 
-            destination.path = this.resolver.resolve(route.getPath(), destination.params);
+            destination.path = this.resolver.resolve(
+                route.getPath(),
+                destination.params,
+            );
         }
 
         if (!destination.path) return null;
@@ -81,7 +93,9 @@ export class Router implements RouterInterface {
         }
 
         if (this.location.isSame(location)) {
-            throw new Error(`The destination location ${location.getPath()} is the current location.`);
+            throw new Error(
+                `The destination location ${location.getPath()} is the current location.`,
+            );
         }
 
         this.history.push(location.getPath());
@@ -96,7 +110,9 @@ export class Router implements RouterInterface {
         }
 
         if (this.location.isSame(location)) {
-            throw new Error(`The destination location ${location.getPath()} is the current location.`);
+            throw new Error(
+                `The destination location ${location.getPath()} is the current location.`,
+            );
         }
 
         this.history.replace(location.getPath());
@@ -118,4 +134,4 @@ export class Router implements RouterInterface {
     getLocation(): Location {
         return this.location;
     }
-};
+}

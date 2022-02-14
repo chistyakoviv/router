@@ -14,4 +14,4 @@ export default class Resolver implements ResolverInterface {
             throw new Error(`Missing param for route ${path}: ${e.message}`);
         }
     }
-};
+}
