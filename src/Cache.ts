@@ -3,10 +3,10 @@ export default class Cache<T> {
         [key: string]: T;
     } = {};
 
-    public get(key: string, value: () => T): T {
+    public get(key: string, value?: () => T): T {
         if (this.items[key]) return this.items[key];
 
-        this.set(key, value());
+        if (value) this.set(key, value());
 
         return this.items[key];
     }
