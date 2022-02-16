@@ -7,7 +7,7 @@ describe('Cache', () => {
         cache = new Cache();
     });
 
-    it('Gets value that cache contain', () => {
+    it('Gets the value that cache contains', () => {
         cache.set('value', 42);
 
         const value = cache.get('value');
@@ -21,13 +21,13 @@ describe('Cache', () => {
         expect(value).toBe(undefined);
     });
 
-    it('Gets the default value when cache does not contain the value yet', () => {
+    it('Gets default value when cache does not contain the value yet', () => {
         const value = cache.get('value', () => 42);
 
         expect(value).toBe(42);
     });
 
-    it('Saves default value on retrieving non-existent value', () => {
+    it('Saves default value on retrieving a non-existent value', () => {
         cache.get('value', () => 42);
 
         const value = cache.get('value');
