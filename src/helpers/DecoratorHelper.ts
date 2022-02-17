@@ -7,7 +7,7 @@ export interface Params {
 export default class DecoratorHelper {
     static wrappers: Params[] = [];
 
-    static wrap(params: Params, fn: Function): void {
+    static wrap(params: Params, fn: () => void): void {
         const wrappers = DecoratorHelper.wrappers;
 
         wrappers.push(params);
@@ -20,7 +20,7 @@ export default class DecoratorHelper {
         const params: Params = { middlewares: [] };
 
         for (let i = 0; i < wrappers.length; i++) {
-            for (let nextParam in wrappers[i]) {
+            for (const nextParam in wrappers[i]) {
                 if (wrappers[i][nextParam]) {
                     switch (nextParam) {
                         case 'path':
@@ -45,9 +45,10 @@ export default class DecoratorHelper {
     }
 
     static applyMiddleware(
-        handler: Function = () => {},
-        middlewares: Function[],
-    ): Function {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        handler: () => void = () => {},
+        middlewares: (() => void)[],
+    ): () => void {
         middlewares = middlewares.slice();
         middlewares.reverse();
 
@@ -57,7 +58,10 @@ export default class DecoratorHelper {
         );
     }
 
-    static compose(f: Function, g: Function): Function {
+    static compose(
+        f: (...args: any) => void,
+        g: (...args: any) => void,
+    ): (...args: any) => void {
         return function (a: any) {
             return f(a, g);
         };
