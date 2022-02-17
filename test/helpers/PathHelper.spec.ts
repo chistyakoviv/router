@@ -7,7 +7,7 @@ describe('Path helper', () => {
         expect(result).toBe('/test/path');
     });
 
-    it('Does not changes path if there is no trailing slash', () => {
+    it('Does not change path if there is no trailing slash', () => {
         const result = PathHelper.removeTrailingSlash('/test/path');
 
         expect(result).toBe('/test/path');
