@@ -62,8 +62,8 @@ export default class DecoratorHelper {
         f: (...args: any) => void,
         g: (...args: any) => void,
     ): (...args: any) => void {
-        return function (a: any) {
-            return f(a, g);
+        return function (data: any) {
+            return f(data, g);
         };
     }
 }
