@@ -4,7 +4,7 @@ export default class PathHelper {
     }
 
     static cleanPath(path: string): string {
-        return (path && path.replace(/\/\//, '/')) || '';
+        return (path && path.replace(/\/\//g, '/')) || '';
     }
 
     static join(lstr: string, rstr: string): string {
