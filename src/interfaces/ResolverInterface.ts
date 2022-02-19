@@ -1,3 +1,3 @@
 export default interface ResolverInterface {
-    resolve(path: string, params?: Object): string;
+    resolve(path: string, params?: Record<string, any>): string;
 }

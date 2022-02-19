@@ -1,4 +1,4 @@
 export default interface EventEmitter {
-    on(name: string, callback: Function): void;
-    off(name: string, callback: Function): void;
+    on(name: string, callback: (...args: any) => void): void;
+    off(name: string, callback: (...args: any) => void): void;
 }
