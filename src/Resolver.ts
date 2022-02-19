@@ -7,7 +7,7 @@ export default class Resolver implements ResolverInterface {
         (...args: any) => string
     >();
 
-    public resolve(path: string, params?: object): string {
+    public resolve(path: string, params?: Record<string, any>): string {
         try {
             const filler = this.cache.get(path, () => compile(path));
 
