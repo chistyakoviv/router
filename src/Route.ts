@@ -49,7 +49,7 @@ export default class Route {
         path: string,
         handler?: (...args: any) => void,
         name?: string,
-    ): void {
+    ): Route {
         const params: Params = DecoratorHelper.getParams();
 
         if (params.as) {
@@ -67,7 +67,11 @@ export default class Route {
             );
         }
 
-        Route.wrappedRoutes.push(new Route(path, handler, name));
+        const route = new Route(path, handler, name);
+
+        Route.wrappedRoutes.push(route);
+
+        return route;
     }
 
     static group(params: Params, fn: (...args: any) => void): void {
@@ -75,7 +79,7 @@ export default class Route {
     }
 
     static build(): Route[] {
-        const routes = Route.wrappedRoutes;
+        const routes = Route.wrappedRoutes.slice();
         Route.wrappedRoutes = [];
         return routes;
     }
