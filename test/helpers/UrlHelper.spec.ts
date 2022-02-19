@@ -29,7 +29,7 @@ describe('Url helper', () => {
         window.location = origLocation;
     });
 
-    it('Return path when current page is /', () => {
+    it('return path when current page is /', () => {
         window.location.pathname = '/';
         window.location.search = '';
         window.location.hash = '';
@@ -39,7 +39,7 @@ describe('Url helper', () => {
         expect(result).toBe('/');
     });
 
-    it('Return path when current page is empty', () => {
+    it('return path when current page is empty', () => {
         window.location.pathname = '/';
         window.location.search = '';
         window.location.hash = '';
@@ -49,7 +49,7 @@ describe('Url helper', () => {
         expect(result).toBe('/');
     });
 
-    it('Return path when current page is /test', () => {
+    it('return path when current page is /test', () => {
         window.location.pathname = '/test';
         window.location.search = '';
         window.location.hash = '';
@@ -59,7 +59,7 @@ describe('Url helper', () => {
         expect(result).toBe('/test');
     });
 
-    it('Return path when current page is /test?test=42', () => {
+    it('return path when current page is /test?test=42', () => {
         window.location.pathname = '/test';
         window.location.search = '?test=42';
         window.location.hash = '';
@@ -69,7 +69,7 @@ describe('Url helper', () => {
         expect(result).toBe('/test?test=42');
     });
 
-    it('Return path when current page is /test#test=42', () => {
+    it('return path when current page is /test#test=42', () => {
         window.location.pathname = '/test';
         window.location.search = '';
         window.location.hash = '#test=42';
@@ -79,7 +79,7 @@ describe('Url helper', () => {
         expect(result).toBe('/test#test=42');
     });
 
-    it('Return path when current page is /test?test=42#test=42', () => {
+    it('return path when current page is /test?test=42#test=42', () => {
         window.location.pathname = '/test';
         window.location.search = '?test=42';
         window.location.hash = '#test=42';
@@ -89,7 +89,7 @@ describe('Url helper', () => {
         expect(result).toBe('/test?test=42#test=42');
     });
 
-    it('Parses path without query or hash', () => {
+    it('parses path without query or hash', () => {
         const result = UrlHelper.parsePath('/test/path');
 
         expect(result).toStrictEqual({
@@ -99,7 +99,7 @@ describe('Url helper', () => {
         });
     });
 
-    it('Parses path with query', () => {
+    it('parses path with query', () => {
         const result = UrlHelper.parsePath('/test/path?test=42&param=42');
 
         expect(result).toStrictEqual({
@@ -109,7 +109,7 @@ describe('Url helper', () => {
         });
     });
 
-    it('Parses path with hash', () => {
+    it('parses path with hash', () => {
         const result = UrlHelper.parsePath('/test/path#test=42&param=42');
 
         expect(result).toStrictEqual({
@@ -119,7 +119,7 @@ describe('Url helper', () => {
         });
     });
 
-    it('Parses path with query and hash', () => {
+    it('parses path with query and hash', () => {
         const result = UrlHelper.parsePath(
             '/test/path?test=42&param=42#test=42&param=42',
         );

@@ -6,7 +6,7 @@ describe('Decorator helper', () => {
         jest.restoreAllMocks();
     });
 
-    it('Wraps function call', () => {
+    it('wraps function call', () => {
         const pushSpy = jest.spyOn(DecoratorHelper.wrappers as any, 'push');
         const popSpy = jest.spyOn(DecoratorHelper.wrappers as any, 'pop');
         const fn = jest.fn();
@@ -18,11 +18,11 @@ describe('Decorator helper', () => {
         expect(popSpy).toHaveBeenCalled();
     });
 
-    it('Gets params when there is no wrappers yet', () => {
+    it('gts params when there is no wrappers yet', () => {
         expect(DecoratorHelper.getParams()).toStrictEqual({ middlewares: [] });
     });
 
-    it('Gets params when wrappers is set', () => {
+    it('gets params when wrappers is set', () => {
         const middleware = jest.fn();
 
         DecoratorHelper.wrappers.push({
@@ -42,7 +42,7 @@ describe('Decorator helper', () => {
         });
     });
 
-    it('Applies middlewares', () => {
+    it('applies middlewares', () => {
         const handler = jest.fn();
         const mw1 = jest.fn();
         const mw2 = jest.fn();
@@ -61,7 +61,7 @@ describe('Decorator helper', () => {
         expect(middlewares).toStrictEqual([mw1, mw2]);
     });
 
-    it('Composes functions', () => {
+    it('composes functions', () => {
         const fn1 = jest.fn();
         const fn2 = jest.fn();
         const fn3 = jest.fn();
