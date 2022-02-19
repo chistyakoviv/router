@@ -5,12 +5,12 @@ import PathHelper from './helpers/PathHelper';
 
 export default class Route {
     private path: string;
-    private matcher: Function;
+    private matcher: (...args: any) => any;
     private name?: string;
-    private handler?: Function;
+    private handler?: (...args: any) => void;
     private static wrappedRoutes: Route[] = [];
 
-    constructor(path: string, handler?: Function, name?: string) {
+    constructor(path: string, handler?: (...args: any) => void, name?: string) {
         this.path = path;
         this.name = name;
         this.handler = handler;
@@ -41,11 +41,15 @@ export default class Route {
         this.name = name;
     }
 
-    getHandler(): Function | null {
+    getHandler(): ((...args: any) => void) | null {
         return this.handler ? this.handler : null;
     }
 
-    static create(path: string, handler?: Function, name?: string): void {
+    static create(
+        path: string,
+        handler?: (...args: any) => void,
+        name?: string,
+    ): void {
         const params: Params = DecoratorHelper.getParams();
 
         if (params.as) {
@@ -66,7 +70,7 @@ export default class Route {
         Route.wrappedRoutes.push(new Route(path, handler, name));
     }
 
-    static group(params: Params, fn: Function): void {
+    static group(params: Params, fn: (...args: any) => void): void {
         DecoratorHelper.wrap(params, fn);
     }
 
