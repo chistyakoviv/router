@@ -3,7 +3,7 @@ import HistoryApi, { HistoryEvents } from '../interfaces/HistoryApi';
 export default abstract class BaseHistory implements HistoryApi {
     protected location?: Location;
     protected events: {
-        [key: string]: (() => void)[];
+        [key: string]: ((...args: any) => void)[];
     } = { [HistoryEvents.POPSTATE]: [] };
 
     abstract go(n: number): void;
@@ -12,11 +12,11 @@ export default abstract class BaseHistory implements HistoryApi {
     abstract back(): void;
     abstract forward(): void;
 
-    on(name: HistoryEvents, callback: () => void): void {
+    on(name: HistoryEvents, callback: (...args: any) => void): void {
         this.events[name].push(callback);
     }
 
-    off(name: HistoryEvents, callback: () => void): void {
+    off(name: HistoryEvents, callback: (...args: any) => void): void {
         const index = this.events[name].indexOf(callback);
 
         if (~index) {
