@@ -5,7 +5,7 @@ export default class Location {
     private path: string;
     private normalizedPath: string;
     private route?: Route;
-    private params?: object;
+    private params?: Record<string, any>;
     private query?: string;
     private hash?: string;
     private parsedQuery?: { [key: string]: string };
@@ -15,7 +15,7 @@ export default class Location {
         path: string,
         normalizedPath: string,
         route?: Route,
-        params?: object,
+        params?: Record<string, any>,
         query?: string,
         hash?: string,
     ) {
@@ -44,7 +44,7 @@ export default class Location {
         handler && handler(router);
     }
 
-    getParams(): object | null {
+    getParams(): Record<string, any> | null {
         return this.params ? this.params : null;
     }
 
@@ -53,7 +53,7 @@ export default class Location {
         return name ? name : null;
     }
 
-    getQuery(): object {
+    getQuery(): Record<string, any> {
         if (this.parsedQuery) return this.parsedQuery;
 
         const query: { [key: string]: string } = {};
