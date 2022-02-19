@@ -1,22 +1,22 @@
 import HistoryApi, { HistoryEvents } from '../interfaces/HistoryApi';
 
-export default class BaseHistory implements HistoryApi {
+export default abstract class BaseHistory implements HistoryApi {
     protected location?: Location;
     protected events: {
-        [key: string]: Function[];
+        [key: string]: (() => void)[];
     } = { [HistoryEvents.POPSTATE]: [] };
 
-    go(n: number) {}
-    push(path: string): void {}
-    replace(path: string): void {}
-    back(): void {}
-    forward(): void {}
+    abstract go(n: number): void;
+    abstract push(path: string): void;
+    abstract replace(path: string): void;
+    abstract back(): void;
+    abstract forward(): void;
 
-    on(name: HistoryEvents, callback: Function): void {
+    on(name: HistoryEvents, callback: () => void): void {
         this.events[name].push(callback);
     }
 
-    off(name: HistoryEvents, callback: Function): void {
+    off(name: HistoryEvents, callback: () => void): void {
         const index = this.events[name].indexOf(callback);
 
         if (~index) {
