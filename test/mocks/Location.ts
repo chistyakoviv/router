@@ -1,5 +1,7 @@
 import Location from '../../src/Location';
 
+export * as LocationClass from '../../src/Location';
+
 export const mockLocationGetPath = jest.fn();
 export const mockLocationGetNormalizedPath = jest.fn();
 export const mockLocationGetRoute = jest.fn();
