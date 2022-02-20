@@ -5,6 +5,8 @@ export const mockHTML5HistoryForward = jest.fn();
 export const mockHTML5HistoryGo = jest.fn();
 export const mockHTML5HistoryPush = jest.fn();
 export const mockHTML5HistoryReplace = jest.fn();
+export const mockHTML5HistoryOn = jest.fn();
+export const mockHTML5HistoryOff = jest.fn();
 
 export const HTML5HistoryMock = jest.fn().mockImplementation(() => {
     const methods = {
@@ -13,6 +15,8 @@ export const HTML5HistoryMock = jest.fn().mockImplementation(() => {
         go: mockHTML5HistoryGo,
         push: mockHTML5HistoryPush,
         replace: mockHTML5HistoryReplace,
+        on: mockHTML5HistoryOn,
+        off: mockHTML5HistoryOff,
     };
     return methods;
 }) as jest.MockedClass<typeof HTML5History>;
