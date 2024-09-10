@@ -21,7 +21,7 @@
     "author": "Chistyakov Ilya",
     "license": "MIT",
     "dependencies": {
-        "path-to-regexp": "^6.1.0"
+        "path-to-regexp": "^8.1.0"
     },
     "jest": {
         "moduleFileExtensions": [
